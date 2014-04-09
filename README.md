@@ -1,4 +1,4 @@
-# http-rewrite-middleware v0.1.5 [![Build Status](https://travis-ci.org/viart/http-rewrite-middleware.png?branch=master)](https://travis-ci.org/viart/http-rewrite-middleware)
+# http-rewrite-middleware v0.1.6 [![Build Status](https://travis-ci.org/viart/http-rewrite-middleware.png?branch=master)](https://travis-ci.org/viart/http-rewrite-middleware)
 
 > This module makes it possible to redirect (rewrite internally or redirect using HTTP codes) User to the specific URL based on RegExp Rules.
 > The designated successor of [grunt-connect-rewrite](https://github.com/viart/grunt-connect-rewrite).
@@ -27,7 +27,9 @@
         // 301 Redirect
         {from: '^/old-stuff/(.*)$', to: '/new-cool-stuff/$1', redirect: 'permanent'},
         // 302 Redirect
-        {from: '^/stuff/(.*)$', to: '/temporary-stuff/$1', redirect: 'temporary'}
+        {from: '^/stuff/(.*)$', to: '/temporary-stuff/$1', redirect: 'temporary'},
+        // Delayed 500ms
+        {from: '^/stuff/(.*)$', to: '/temporary-stuff/$1', redirect: 'temporary', delay: 500 }
     ]);
     ```
 
@@ -37,7 +39,7 @@
 
 ##### Rule's format:
 
-`{from: '__from__', to: '__to__'[, redirect: 'permanent'|'temporary']}`
+`{from: '__from__', to: '__to__'[, redirect: 'permanent'|'temporary', delay: 123]}`
 
 Where:
 * `__from__` - RegExp string to match.
@@ -45,6 +47,9 @@ Where:
 * `redirect` - Optional parameter:
     * When it is omitted then the Rule will be dispatched as an internal rewrite (aka proxified).
     * If the value is set then Browser will receive HTTP `Location` Header with value of parsed `__to__` (`permanent` value will give `HTTP 301`, any other value will give `HTTP 302`).
+* `delay` - Optional parameter:
+    * When this is omitted then the Rule will be dispatched immediately
+    * If the value is set then the Rule will be dispatched after n milliseconds
 
 ### Example of usage with Connect
 
