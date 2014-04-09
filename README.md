@@ -29,7 +29,11 @@
         // 302 Redirect
         {from: '^/stuff/(.*)$', to: '/temporary-stuff/$1', redirect: 'temporary'},
         // Delayed 500ms
-        {from: '^/stuff/(.*)$', to: '/temporary-stuff/$1', redirect: 'temporary', delay: 500 }
+        {from: '^/stuff/(.*)$', to: '/temporary-stuff/$1', redirect: 'temporary', delay: 500 },
+        // Delayed random 0-5000ms via function
+        {from: '^/stuff/(.*)$', to: '/temporary-stuff/$1', redirect: 'temporary', delay: function( req ) {
+          return Math.random() * 5000;
+        } }
     ]);
     ```
 
@@ -50,6 +54,7 @@ Where:
 * `delay` - Optional parameter:
     * When this is omitted then the Rule will be dispatched immediately
     * If the value is set then the Rule will be dispatched after n milliseconds
+    * If the value is a function then the function is executed with the request passed as a parameter
 
 ### Example of usage with Connect
 

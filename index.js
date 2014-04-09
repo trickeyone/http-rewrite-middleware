@@ -72,25 +72,26 @@ Rewriter.prototype = {
   dispatcher: function( req, res, next ) {
     var logger = this.log.verbose;
     return function( rule ) {
-      var toUrl;
+      var toUrl, delay;
       if( rule.from.test( req.url ) ) {
         toUrl = req.url.replace( rule.from, rule.to );
+        delay = rule.delay ? rule.delay instanceof Function ? rule.delay( req ) : rule.delay : 0;
         if( !rule.redirect ) {
           req.url = toUrl;
-          if( rule.delay ) {
+          if( delay ) {
             setTimeout( function() {
               next();
-            }, rule.delay );
+            }, delay );
           } else {
             next();
           }
         } else {
           res.statusCode = rule.redirect;
           res.setHeader( 'Location', toUrl );
-          if( rule.delay ) {
+          if( delay ) {
             setTimeout( function() {
               res.end();
-            }, rule.delay );
+            }, delay );
           } else {
             res.end();
           }
